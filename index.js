@@ -18,6 +18,7 @@ client.on('message', message => {
         const today = new Date();
         const diffTime = Math.abs(lastBan - today);
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        console.log(today);
         message.channel.send(diffDays + ' days since the last ban! Keep it up 🙂');
     }
     else if (command == 'tilted') {
@@ -36,7 +37,9 @@ client.on('message', message => {
                         '-Dani - Days since last ban\n' + 
                         '-tilted - Article for avoiding tilt \n' + 
                         '-cringe - C R I N G E (Top 5 An*mes)\n' +
-                        '-chill - TOP VIBES';
+                        '-chill - TOP VIBES\n' +
+                        '-stream @username - PUSKAI STREAM WE\n' +
+                        '-rank1 vlad - RANK1 VLAD HEAVY 🧢 ';
 
         message.channel.send(commands);
     }
@@ -50,11 +53,8 @@ client.on('message', message => {
 	    if (!user) return;
         message.channel.send(user);
         message.channel.send('https://media.tenor.com/images/037ad7fd2f75a122c29f25f241b2770d/tenor.gif');
-
-
     }
     else if (command == 'rank1' && args[0]=='vlad'){
-
         const command = 'https://eune.op.gg/summoner/userName=Vlad2MeetYou 🧢'
         message.channel.send(command);
     }
