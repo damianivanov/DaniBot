@@ -18,29 +18,31 @@ client.on('message', message => {
         const today = new Date();
         const diffTime = Math.abs(lastBan - today);
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-        message.channel.send(diffDays + ' days since last ban! Keep it up    :)');
+        message.channel.send(diffDays + ' days since the last ban! Keep it up 🙂');
     }
     else if (command == 'tilted') {
         message.channel.send('https://on-winning.com/avoid-tilt/');
     }
     else if (command == 'cringe') {
-        const list = '1 Fullmetal Alchemist: Brotherhood (TV)    9.09    5833\n' + 
-                     '2 your name. (movie)    9.05    1118\n' +
-                     '3 Clannad After Story (TV)    9.05    5182\n' +
-                     '4 Steins;Gate (TV)    9.05    4672\n' +
-                     '5 Rurouni Kenshin: Trust & Betrayal (OAV)    8.97    6654';
+        const list = '1 Death Note. 9.98 / 10\n' + 
+                     '2 Fullmetal Alchemist: Brotherhood. 9.59 / 10\n' +
+                     '3 Naruto. 9.31 / 10\n' +
+                     '4 Attack on Titan. 9.74 / 10.\n' +
+                     '5 Dragon Ball Z. 9.15 / 10';
         message.channel.send(list);
     }
     else if (command=='info'){
         const commands = 'Supported Commands:\n'+
                         '-Dani - Days since last ban\n' + 
                         '-tilted - Article for avoiding tilt \n' + 
-                        '-cringe - C R I N G E (Top 5 An*mes)';
+                        '-cringe - C R I N G E (Top 5 An*mes)\n' +
+                        '-chill - TOP VIBES';
+
         message.channel.send(commands);
     }
-    else if (command == 'antitilt')
+    else if (command == 'chill')
     {   
-        const command = '-p https://www.youtube.com/watch?v=einR_rqDICU&ab_channel=YordanAngelov';
+        const command = 'https://www.youtube.com/watch?v=einR_rqDICU&ab_channel=YordanAngelov';
         message.channel.send(command);
     }
 });
