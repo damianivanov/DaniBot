@@ -17,7 +17,7 @@ client.on('message', message => {
     if (command === 'dani') {
         const today = new Date();
         const diffTime = Math.abs(lastBan - today);
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        const diffDays = Math.ceil((diffTime + (1000*60*60*3)) / (1000 * 60 * 60 * 24));
         console.log(today);
         message.channel.send(diffDays + ' days since the last ban! Keep it up 🙂');
     }
