@@ -45,5 +45,17 @@ client.on('message', message => {
         const command = 'https://www.youtube.com/watch?v=einR_rqDICU&ab_channel=YordanAngelov';
         message.channel.send(command);
     }
+    else if (command == 'stream'){
+        const user = args[0];
+	    if (!user) return;
+
+        const command = user +' https://media.discordapp.net/attachments/318116226838822912/788480519728922714/puskai-striim.gif'
+        message.channel.send(command);
+    }
+    else if (command == 'rank1' && args[0]=='vlad'){
+
+        const command = 'https://eune.op.gg/summoner/userName=Vlad2MeetYou 🧢'
+        message.channel.send(command);
+    }
 });
 client.login(process.env.token);
