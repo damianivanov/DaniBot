@@ -44,4 +44,4 @@ client.on('message', message => {
         message.channel.send(command);
     }
 });
-client.login(process.env.TOKEN);
+client.login(process.env.token);
