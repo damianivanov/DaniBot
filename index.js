@@ -19,7 +19,7 @@ client.on('message', message => {
         const diffTime = Math.abs(lastBan - today);
         const diffDays = Math.ceil((diffTime + (1000*60*60*3)) / (1000 * 60 * 60 * 24));
         console.log(today);
-        message.channel.send(diffDays + ' days since the last ban! Keep it up 🙂');
+        message.channel.send(diffDays-1 + ' days since the last ban! Keep it up 🙂');
     }
     else if (command == 'tilted') {
         message.channel.send('https://on-winning.com/avoid-tilt/');
