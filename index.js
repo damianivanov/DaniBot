@@ -48,9 +48,10 @@ client.on('message', message => {
     else if (command == 'stream'){
         const user = args[0];
 	    if (!user) return;
+        message.channel.send(user);
+        message.channel.send('https://media.tenor.com/images/037ad7fd2f75a122c29f25f241b2770d/tenor.gif');
 
-        const command = user +' https://media.discordapp.net/attachments/318116226838822912/788480519728922714/puskai-striim.gif'
-        message.channel.send(command);
+
     }
     else if (command == 'rank1' && args[0]=='vlad'){
 
