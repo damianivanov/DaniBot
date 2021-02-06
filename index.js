@@ -39,7 +39,8 @@ client.on('message', message => {
                         '-cringe - C R I N G E (Top 5 An*mes)\n' +
                         '-chill - TOP VIBES\n' +
                         '-stream @username - PUSKAI STREAM WE\n' +
-                        '-rank1 vlad - RANK1 VLAD HEAVY 🧢 ';
+                        '-rank1 vlad - RANK1 VLAD HEAVY 🧢 \n' +
+                        '-queue - Check if you are in Losers or Winners Queue(using Algebra 2 and algorithms from NASA)';
 
         message.channel.send(commands);
     }
@@ -57,6 +58,11 @@ client.on('message', message => {
     else if (command == 'rank1' && args[0]=='vlad'){
         const command = 'https://eune.op.gg/summoner/userName=Vlad2MeetYou 🧢'
         message.channel.send(command);
+    }
+    else if(command == 'queue'){
+        var number = (Math.floor(Math.random() * 100))%2;
+        var options = ["Losers Queue","Winners Queue"];
+        message.channel.send(options[number]);
     }
 });
 client.login(process.env.token);
