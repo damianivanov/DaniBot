@@ -78,7 +78,6 @@ client.on('message', message => {
     }
     else if(command == 'motto'){
         message.channel.send("Dani's life moto is - My life is a party, my home is the club!");
-
     }
 });
 client.login(process.env.token);
