@@ -37,8 +37,16 @@ client.on('message', message => {
     else if (command == 'stream'){
         const user = args[0];
 	    if (!user) return;
-        message.channel.send(user);
-        message.channel.send('https://media.tenor.com/images/037ad7fd2f75a122c29f25f241b2770d/tenor.gif');
+        const userid = user.match(/[0-9]+/g)[0]; 
+        var currUser = client.users.cache.find(user=>user.id===userid);
+        var status  = currUser.presence.status;
+        if (status == 'online'  || status == 'idle') {
+            
+            message.channel.send(user);
+            message.channel.send('https://media.tenor.com/images/037ad7fd2f75a122c29f25f241b2770d/tenor.gif');
+        }
+        else
+            message.channel.send(user + " is 🔨 his 🥩");
     }
     else if (command == 'rank1' && args[0]=='vlad'){
         const command = 'https://eune.op.gg/summoner/userName=Vlad2MeetYou 🧢'
