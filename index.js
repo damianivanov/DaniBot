@@ -107,5 +107,12 @@ client.on('message', message => {
             bot.unlock()
         }
     }
+    else if (command== "pochwame") {
+        message.channel.send('zdr, da znae6 4e', {
+            files: [
+                "./start.png"
+            ]
+        });
+    }
 });
 client.login(process.env.token);
