@@ -44,6 +44,7 @@ client.on('message', message => {
 	    if (!user) return;
         const userid = user.match(/[0-9]+/g)[0]; 
         var currUser = client.users.cache.find(user=>user.id===userid);
+        if(!currUser) return;
         var status  = currUser.presence.status;
         if (status == 'online'  || status == 'idle') {
             
