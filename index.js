@@ -14,6 +14,8 @@ const client = new Discord.Client();
 const prefix = '-';
 var dictLosersQueue = {'378275337164816394':0};
 var dictWinnersQueue = {'378275337164816394':0};
+var dictVoiceCommands = {'imali':'./imali.mp3', 'monitor':'./Im_gonna_break_my_monitor.mp3','eitypag':'./ei_typag.mp3'}
+
 client.once('ready', () => {
     console.log('DaniBot is online!');
 });
@@ -93,54 +95,31 @@ client.on('message', message => {
     else if(command == 'motto'){
         message.channel.send("Dani's life moto is - My life is a party, my home is the club!");
     }
-    else if(command == 'monitor' && !bot.isLocked()){
-        bot.lock();
-        var voiceChannel = message.member.voice.channel;
-        if (!voiceChannel) {
-            message.channel.send("You have to be in voice 4annel be typak");
-        }
-        else{
-            voiceChannel.join().then(connection => {
-                const dispatcher = connection.play('./Im_gonna_break_my_monitor.mp3');
-                dispatcher.on('finish', end => voiceChannel.leave());
-            }).catch(err => console.log(err))
-            bot.unlock()
-        }
-    }
-    else if(command == 'imali' && !bot.isLocked()){
-        bot.lock();
-        var voiceChannel = message.member.voice.channel;
-        if (!voiceChannel) {
-            message.channel.send("You have to be in voice 4annel be typak");
-        }
-        else{
-            voiceChannel.join().then(connection => {
-                const dispatcher = connection.play('./imali.mp3');
-                dispatcher.on('finish', end => voiceChannel.leave());
-            }).catch(err => console.log(err))
-            bot.unlock()
-        }
-    }
-    else if(command == 'eitypag' && !bot.isLocked()){
-        bot.lock();
-        var voiceChannel = message.member.voice.channel;
-        if (!voiceChannel) {
-            message.channel.send("You have to be in voice 4annel be typak");
-        }
-        else{
-            voiceChannel.join().then(connection => {
-                const dispatcher = connection.play('./ei_typag.mp3');
-                dispatcher.on('finish', end => voiceChannel.leave());
-            }).catch(err => console.log(err))
-            bot.unlock()
-        }
-    }
     else if (command== "pochwame") {
         message.channel.send('zdr, da znae6 4e', {
             files: [
                 "./start.png"
             ]
         });
+    }
+    else if((command in dictVoiceCommands) && !bot.isLocked()){
+        const author = message.author;
+        var volume = 2;
+        if (command == 'eitypag' && (author.username == "damian.iv" || author.username == "Velirax")) {
+            volume = 200;
+        }
+        bot.lock();
+        var voiceChannel = message.member.voice.channel;
+        if (!voiceChannel) {
+            message.channel.send("You have to be in voice 4annel be typak");
+        }
+        else {
+            voiceChannel.join().then(connection => {
+                const dispatcher = connection.play(dictVoiceCommands[command],{volume: volume});
+                dispatcher.on('finish', end => voiceChannel.leave());
+            }).catch(err => console.log(err))
+            bot.unlock()
+        }
     }
 });
 client.login(process.env.token);
