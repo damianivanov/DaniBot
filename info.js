@@ -14,6 +14,8 @@ module.exports = { info: function(){
     '-t - Check if Dani is at school or not\n' + 
     '-pochwame - Pepi\'s brain fart \n' +
     '-monitor - Anti angry \n' +
+    '-imali \n' +
+    '-eitypag \n' +
     ''
     ;
     return commands;
