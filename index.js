@@ -107,6 +107,34 @@ client.on('message', message => {
             bot.unlock()
         }
     }
+    else if(command == 'imali' && !bot.isLocked()){
+        bot.lock();
+        var voiceChannel = message.member.voice.channel;
+        if (!voiceChannel) {
+            message.channel.send("You have to be in voice 4annel be typak");
+        }
+        else{
+            voiceChannel.join().then(connection => {
+                const dispatcher = connection.play('./imali.mp3');
+                dispatcher.on('finish', end => voiceChannel.leave());
+            }).catch(err => console.log(err))
+            bot.unlock()
+        }
+    }
+    else if(command == 'eitypag' && !bot.isLocked()){
+        bot.lock();
+        var voiceChannel = message.member.voice.channel;
+        if (!voiceChannel) {
+            message.channel.send("You have to be in voice 4annel be typak");
+        }
+        else{
+            voiceChannel.join().then(connection => {
+                const dispatcher = connection.play('./ei_typag.mp3');
+                dispatcher.on('finish', end => voiceChannel.leave());
+            }).catch(err => console.log(err))
+            bot.unlock()
+        }
+    }
     else if (command== "pochwame") {
         message.channel.send('zdr, da znae6 4e', {
             files: [
