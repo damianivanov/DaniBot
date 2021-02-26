@@ -8,13 +8,23 @@ const opusscript = require('opusscript');
 const Discord = require('discord.js');
 
 const {LockableClient} = require('./lockable-client');
+const { lastBan } = require('./dani');
 const bot = new LockableClient();
 
 const client = new Discord.Client();
 const prefix = '-';
 var dictLosersQueue = {'378275337164816394':0};
 var dictWinnersQueue = {'378275337164816394':0};
-var dictVoiceCommands = {'imali':'./imali.mp3', 'monitor':'./Im_gonna_break_my_monitor.mp3','eitypag':'./ei_typag.mp3'}
+var dictVoiceCommands = {'imali':'./imali.mp3', 
+                        'monitor':'./Im_gonna_break_my_monitor.mp3',
+                        'eitypag':'./ei_typag.mp3'}
+var dictCommands = {
+                    'tilted':'https://on-winning.com/avoid-tilt/',
+                    'cringe': cringe.list(),
+                    'info':inf.info(),
+                    'chill':playlist.chill(),
+                    'rank1':'https://eune.op.gg/summoner/userName=Vlad2MeetYou 🧢',
+                    'motto':"Dani's life moto is - My life is a party, my home is the club!"}
 
 client.once('ready', () => {
     console.log('DaniBot is online!');
@@ -29,17 +39,8 @@ client.on('message', message => {
     if (command === 'dani') {
         message.channel.send(dani.lastBan());
     }
-    else if (command == 'tilted') {
-        message.channel.send('https://on-winning.com/avoid-tilt/');
-    }
-    else if (command == 'cringe') {
-        message.channel.send(cringe.list());
-    }
-    else if (command=='info'){
-        message.channel.send(inf.info());
-    }
-    else if (command == 'chill'){   
-        message.channel.send(playlist.chill());
+    else if (command === 't') {
+        message.channel.send(daniTime.timeOfday());
     }
     else if (command == 'stream'){
         const user = args[0];
@@ -57,8 +58,10 @@ client.on('message', message => {
             message.channel.send(user + " is 🔨 his 🥩");
     }
     else if (command == 'rank1' && args[0]=='vlad'){
-        const command = 'https://eune.op.gg/summoner/userName=Vlad2MeetYou 🧢'
-        message.channel.send(command);
+        message.channel.send(dictCommands[command]);
+    }
+    else if((command in dictCommands)){
+        message.channel.send(dictCommands[command]);
     }
     else if(command == 'mm'){
         var number = (Math.floor(Math.random() * 100))%2;
@@ -89,12 +92,6 @@ client.on('message', message => {
        
         message.channel.send(command);
     }
-    else if(command == 't'){
-        message.channel.send(daniTime.timeOfday())
-    }
-    else if(command == 'motto'){
-        message.channel.send("Dani's life moto is - My life is a party, my home is the club!");
-    }
     else if (command== "pochwame") {
         message.channel.send('zdr, da znae6 4e', {
             files: [
@@ -103,12 +100,12 @@ client.on('message', message => {
         });
     }
     else if((command in dictVoiceCommands) && !bot.isLocked()){
-        const author = message.author;
+        bot.lock();
+        const author = message.author.id;
         var volume = 2;
-        if (command == 'eitypag' && (author.username == "damian.iv" || author.username == "Velirax")) {
+        if (command == 'eitypag' && ( author == '378275337164816394' || author == "163416315892072448")) {
             volume = 200;
         }
-        bot.lock();
         var voiceChannel = message.member.voice.channel;
         if (!voiceChannel) {
             message.channel.send("You have to be in voice 4annel be typak");
@@ -117,6 +114,7 @@ client.on('message', message => {
             voiceChannel.join().then(connection => {
                 const dispatcher = connection.play(dictVoiceCommands[command],{volume: volume});
                 dispatcher.on('finish', end => voiceChannel.leave());
+                dispatcher.on('error', console.error);
             }).catch(err => console.log(err))
             bot.unlock()
         }
