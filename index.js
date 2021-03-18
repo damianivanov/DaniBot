@@ -106,6 +106,9 @@ client.on('message', message => {
             ]
         });
     }
+    else if(command == "nightmare"){
+        message.channel.send("https://media1.tenor.com/images/4e14ace0fffd89910d2bd2496a68c848/tenor.gif?itemid=20801017")
+    }
     else if((command in dictVoiceCommands) && !bot.isLocked()){
         const author = message.author;
         var volume = 2;
