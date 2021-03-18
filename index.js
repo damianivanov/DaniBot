@@ -4,45 +4,47 @@ var dani = require('./dani');
 var cringe = require('./animeList');
 var playlist = require('./chill');
 var daniTime = require('./timeDani');
-const opusscript = require('opusscript');
 const Discord = require('discord.js');
 
-const {LockableClient} = require('./lockable-client');
+const { LockableClient } = require('./lockable-client');
 const { lastBan } = require('./dani');
 const bot = new LockableClient();
 
 const client = new Discord.Client();
 const prefix = '-';
-var dictLosersQueue = {'378275337164816394':0};
-var dictWinnersQueue = {'378275337164816394':0};
-var dictVoiceCommands = {'imali':'./imali.mp3', 
-                        'monitor':'./Im_gonna_break_my_monitor.mp3',
-                        'eitypag':'./ei_typag.mp3'}
+var dictLosersQueue = { '378275337164816394': 0 };
+var dictWinnersQueue = { '378275337164816394': 0 };
+var dictAdmins = ['378275337164816394', '163416315892072448'];
+
+var dictVoiceCommands = {
+    'imali': './imali.mp3',
+    'monitor': './Im_gonna_break_my_monitor.mp3',
+    'eitypag': './ei_typag.mp3'
+}
 var dictCommands = {
-                    'tilted':'https://on-winning.com/avoid-tilt/',
-                    'cringe': cringe.list(),
-                    'info':inf.info(),
-                    'chill':playlist.chill(),
-                    'rank1':'https://eune.op.gg/summoner/userName=Vlad2MeetYou 🧢',
-                    'motto':"Dani's life moto is - My life is a party, my home is the club!"}
+    'tilted': 'https://on-winning.com/avoid-tilt/',
+    'cringe': cringe.list(),
+    'info': inf.info(),
+    'chill': playlist.chill(),
+    'rank1': 'https://eune.op.gg/summoner/userName=Vlad2MeetYou 🧢',
+    'motto': "Dani's life moto is - My life is a party, my home is the club!"
+}
 
 client.once('ready', () => {
     console.log('DaniBot is online!');
 });
 
-client.on('message', message => {
+client.on('message', async message => {
     if (!message.content.startsWith(prefix) || message.author.bot) return;
-
     const args = message.content.slice(prefix.length).split(/ +/);
     const command = args.shift().toLowerCase();
-
     if (command === 'dani') {
         message.channel.send(dani.lastBan());
     }
     else if (command === 't') {
         message.channel.send(daniTime.timeOfday());
     }
-    else if (command == 'stream'){
+    else if (command == 'stream') {
         const user = args[0];
 	    if (!user) return;
         const userid = user.match(/[0-9]+/g)[0]; 
@@ -57,14 +59,13 @@ client.on('message', message => {
             };
            
             message.channel.send('https://media.tenor.com/images/037ad7fd2f75a122c29f25f241b2770d/tenor.gif');
-        }
-        else
+        } else
             message.channel.send(user + " is 🔨 his 🥩");
     }
-    else if (command == 'rank1' && args[0]=='vlad'){
+    else if (command == 'rank1' && args[0] == 'vlad') {
         message.channel.send(dictCommands[command]);
     }
-    else if((command in dictCommands)){
+    else if ((command in dictCommands)) {
         message.channel.send(dictCommands[command]);
     }
     else if(command == 'mm'){
@@ -96,7 +97,7 @@ client.on('message', message => {
        
         message.channel.send(command);
     }
-    else if (command== "pochwame") {
+    else if (command == "pochwame") {
         message.channel.send('zdr, da znae6 4e', {
             files: [
                 "./start.png"
