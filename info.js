@@ -16,6 +16,7 @@ module.exports = { info: function(){
     '-monitor - Anti angry \n' +
     '-imali \n' +
     '-eitypag \n' +
+    '-nightmare \n' +
     ''
     ;
     return commands;
