@@ -51,6 +51,10 @@ client.on('message', message => {
         if (status == 'online'  || status == 'idle') {
             
             message.channel.send(user);
+            if(user == "<@!374199399146061836>"){
+            message.channel.send("You can also try - https://www.twitch.tv/gnoyl9375");
+            };
+           
             message.channel.send('https://media.tenor.com/images/037ad7fd2f75a122c29f25f241b2770d/tenor.gif');
         }
         else
