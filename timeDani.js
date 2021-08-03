@@ -3,10 +3,9 @@ module.exports  = { timeOfday: function()
         var currentTime = new Date();
         var hours = currentTime.getHours()+2;
         var day = currentTime.getUTCDay();
-        //console.log(`days: ${day} - hours:${hours}`);
-        if ((day >= 1  && day <= 5) && (hours >= 8 && hours <= 15))
-            return "Dani is currently in school getting this 🍆"
+        if ((hours >= 15 && hours <= 5))
+            return "Dani is grinding c#/c++/c/python/Angular/React/Ruby on Rails/Swift/GO/Kotlin/Java/JavaScript/TypeScript 🧢"
         else
-            return "Dani is waiting for new year to get this 🍆"
+            return "Dani is chillaxin' "
     }
 }

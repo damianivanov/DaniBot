@@ -5,7 +5,6 @@ var cringe = require('./animeList');
 var playlist = require('./chill');
 var daniTime = require('./timeDani');
 const Discord = require('discord.js');
-var dictAdmins = ['378275337164816394', '163416315892072448'];
 
 const { LockableClient } = require('./lockable-client');
 const { lastBan } = require('./dani');
@@ -41,9 +40,12 @@ client.on('message', async message => {
     const command = args.shift().toLowerCase();
     if (command === 'dani') {
         message.channel.send(dani.lastBan());
-    } else if (command === 't') {
+    }
+    else if (command === 't') {
         message.channel.send(daniTime.timeOfday());
-    } else if (command == 'stream') {
+    }
+
+    else if (command == 'stream') {
         const user = args[0];
         if (!user) return;
         const userid = user.match(/[0-9]+/g)[0];
@@ -55,7 +57,8 @@ client.on('message', async message => {
             message.channel.send(user);
             if (user == "<@!374199399146061836>") {
                 message.channel.send("You can also try - https://www.twitch.tv/gnoyl9375");
-            } else if (user == "<@!214072494737457152>") {
+            }
+            else if (user == "<@!214072494737457152>") {
                 var voice = message
                     .guild
                     .members
@@ -66,54 +69,54 @@ client.on('message', async message => {
                     message.channel.send("vlizai ku4e");
                     message.channel.send("https://media1.tenor.com/images/4e14ace0fffd89910d2bd2496a68c848/tenor.gif?itemid=20801017")
                     return
-                } else {
+                }
+                else {
                     message.channel.send("Probvai tuk: https://www.twitch.tv/freewaydani");
                 };
 
             };
             message.channel.send('https://media.tenor.com/images/037ad7fd2f75a122c29f25f241b2770d/tenor.gif');
-        } else
+        }
+        else
             message.channel.send(user + " is 🔨 his 🥩");
-    } else if (command == 'rank1' && args[0] == 'vlad') {
+    }
+    
+    else if (command == 'rank1' && args[0] == 'vlad') {
         message.channel.send(dictCommands[command]);
-    } else if ((command in dictCommands)) {
+    }
+
+    else if ((command in dictCommands)) {
         message.channel.send(dictCommands[command]);
-    } else if (command == 'mm') {
+    }
+
+    else if (command == 'mm') {
         var number = (Math.floor(Math.random() * 100)) % 2;
         var options = ["Losers Queue", "Winners Queue"];
         var option = options[number];
         var user = message.member.user.id;
         message.channel.send(option);
+    }
 
-        // if(option == "Losers Queue"){
-        //     if (isNaN(dictLosersQueue[user])) {
-        //         dictLosersQueue[user]=0;
-        //     }
-        //     dictLosersQueue[user]+=1;
-        //     console.log(`Losers Queue for ${message.member.user.username} is ${dictLosersQueue[user]}`);
-        // }
-        // else{
-        //     if (isNaN(dictWinnersQueue[user])) {
-        //         dictWinnersQueue[user]=0;
-        //     }
-        //     dictWinnersQueue[user]+=1;
-        //     console.log(`Winners Queue for ${message.member.user.username} is ${dictWinnersQueue[user]}`);   
-        // }
-    } else if (command == 'newyear') {
+    else if (command == 'newyear') {
         const command = 'https://pubmed.ncbi.nlm.nih.gov/7396691/'
 
         message.channel.send('Не сте сами! <@!214072494737457152>  <@!374199399146061836> ');
 
         message.channel.send(command);
-    } else if (command == "pochwame") {
+    }
+    else if (command == "pochwame") {
         message.channel.send('zdr, da znae6 4e', {
             files: [
                 "./start.png"
             ]
         });
-    } else if (command == "nightmare") {
+    }
+
+    else if (command == "nightmare") {
         message.channel.send("https://media1.tenor.com/images/4e14ace0fffd89910d2bd2496a68c848/tenor.gif?itemid=20801017")
-    } else if ((command in dictVoiceCommands) && !bot.isLocked()) {
+    }
+
+    else if ((command in dictVoiceCommands) && !bot.isLocked()) {
         bot.lock();
         const author = message.author.id;
         var volume = 2;
@@ -123,7 +126,8 @@ client.on('message', async message => {
         var voiceChannel = message.member.voice.channel;
         if (!voiceChannel) {
             message.channel.send("You have to be in voice 4annel be typak");
-        } else {
+        }
+        else {
             voiceChannel.join().then(connection => {
                 const dispatcher = connection.play(dictVoiceCommands[command], { volume: volume });
                 dispatcher.on('finish', end => voiceChannel.leave());
@@ -133,7 +137,4 @@ client.on('message', async message => {
         }
     }
 });
-
-
-
 client.login(process.env.token);
