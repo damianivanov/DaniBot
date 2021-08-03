@@ -1,5 +1,5 @@
 module.exports = { lastBan: function(){
-    const lastBan = new Date('2/5/2021');
+    const lastBan = new Date('3/8/2021');
     const today = new Date();
     const diffTime = Math.abs(lastBan - today);
     const diffDays = Math.ceil((diffTime + (1000*60*60*3)) / (1000 * 60 * 60 * 24));
