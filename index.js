@@ -44,6 +44,7 @@ client.on('message', async message => {
     else if (command === 't') {
         message.channel.send(daniTime.timeOfday());
     }
+
     else if (command == 'stream') {
         const user = args[0];
         if (!user) return;
@@ -79,34 +80,23 @@ client.on('message', async message => {
         else
             message.channel.send(user + " is 🔨 his 🥩");
     }
+    
     else if (command == 'rank1' && args[0] == 'vlad') {
         message.channel.send(dictCommands[command]);
     }
+
     else if ((command in dictCommands)) {
         message.channel.send(dictCommands[command]);
     }
+
     else if (command == 'mm') {
         var number = (Math.floor(Math.random() * 100)) % 2;
         var options = ["Losers Queue", "Winners Queue"];
         var option = options[number];
         var user = message.member.user.id;
         message.channel.send(option);
-
-        // if(option == "Losers Queue"){
-        //     if (isNaN(dictLosersQueue[user])) {
-        //         dictLosersQueue[user]=0;
-        //     }
-        //     dictLosersQueue[user]+=1;
-        //     console.log(`Losers Queue for ${message.member.user.username} is ${dictLosersQueue[user]}`);
-        // }
-        // else{
-        //     if (isNaN(dictWinnersQueue[user])) {
-        //         dictWinnersQueue[user]=0;
-        //     }
-        //     dictWinnersQueue[user]+=1;
-        //     console.log(`Winners Queue for ${message.member.user.username} is ${dictWinnersQueue[user]}`);   
-        // }
     }
+
     else if (command == 'newyear') {
         const command = 'https://pubmed.ncbi.nlm.nih.gov/7396691/'
 
@@ -121,9 +111,11 @@ client.on('message', async message => {
             ]
         });
     }
+
     else if (command == "nightmare") {
         message.channel.send("https://media1.tenor.com/images/4e14ace0fffd89910d2bd2496a68c848/tenor.gif?itemid=20801017")
     }
+
     else if ((command in dictVoiceCommands) && !bot.isLocked()) {
         bot.lock();
         const author = message.author.id;
