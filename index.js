@@ -134,11 +134,9 @@ client.on("message", async (message) => {
     const author = message.author.id;
     if (spam.sameMessages(2, 10000)) {  
       blackList.push(author);
-      console.log(blackList)
       setInterval(function() { 
         blackList=[]
-        console.log(blackList)
-    }, 5000);
+    }, 10000);
       message.channel.send("Pochini malko baluk");
       var voice = message.guild.members.cache.find(
         (user) => user.id === author
