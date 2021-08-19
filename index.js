@@ -1,5 +1,6 @@
-require('dotenv').config();
+require("dotenv").config();
 var inf = require('./info');
+var spam = require('spamnya')
 var dani = require('./dani');
 var cringe = require('./animeList');
 var playlist = require('./chill');
@@ -10,31 +11,58 @@ const { LockableClient } = require('./lockable-client');
 
 const bot = new LockableClient();
 const client = new Discord.Client();
-const prefix = '-';
-var dictLosersQueue = { '378275337164816394': 0 };
-var dictWinnersQueue = { '378275337164816394': 0 };
-var dictAdmins = ['378275337164816394', '163416315892072448'];
-
+const prefix = "-";
+var dictLosersQueue = { "378275337164816394": 0 };
+var dictWinnersQueue = { "378275337164816394": 0 };
+var dictAdmins = ["378275337164816394", "163416315892072448"];
+var blackList= []
 var dictVoiceCommands = {
-    'imali': './imali.mp3',
-    'monitor': './Im_gonna_break_my_monitor.mp3',
-    'eitypag': './ei_typag.mp3',
-    'papi': './chupapi_short.mp3'
-}
+  imali: "./imali.mp3",
+  monitor: "./Im_gonna_break_my_monitor.mp3",
+  eitypag: "./ei_typag.mp3",
+  papi: "./chupapi_short.mp3",
+};
 
 var dictCommands = {
-    'tilted': 'https://on-winning.com/avoid-tilt/',
-    'cringe': cringe.list(),
-    'info': inf.info(),
-    'chill': playlist.chill(),
-    'rank1': 'https://eune.op.gg/summoner/userName=Vlad2MeetYou 🧢',
-    'motto': "Dani's life moto is - My life is a party, my home is the club!",
-}
+  tilted: "https://on-winning.com/avoid-tilt/",
+  cringe: cringe.list(),
+  info: inf.info(),
+  chill: playlist.chill(),
+  rank1: "https://eune.op.gg/summoner/userName=Vlad2MeetYou 🧢",
+  motto: "Dani's life moto is - My life is a party, my home is the club!",
+};
 
-client.once('ready', () => {
-    console.log('DaniBot is online!');
+
+client.once("ready", () => {
+  console.log("DaniBot is online!");
 });
 
+// client.on("voiceStateUpdate", (oldState, newState) => {
+//   var voiceChannel = newState.channel;
+//   let oldChannel = oldState.channel 
+//   let newChannel = newState.channel
+
+//   if (oldChannel === newChannel) return;
+  
+//   if (
+//     oldState.member.user.id === "378275337164816394" &&
+//     voiceChannel &&
+//     !bot.isLocked()
+//   ) {
+//     bot.lock();
+//     voiceChannel
+//       .join() 
+//       .then((connection) => {
+//         const dispatcher = connection.play(dictVoiceCommands["papi"], {
+//           volume: 1,
+//         });
+//         dispatcher.on("finish", (end) => voiceChannel.leave());
+//         dispatcher.on("error", console.error);
+//       })
+//       .catch((err) => console.log(err));
+//     bot.unlock();
+//   }
+// });
 
 client.on("message", async (message) => {
   if (!message.content.startsWith(prefix) || message.author.bot) return;
@@ -46,7 +74,7 @@ client.on("message", async (message) => {
     message.channel.send(daniTime.timeOfday());
   } else if (command == "stream") {
     const user = args[0];
-    var taggedUser = getUserByTag(user);
+    var taggedUser = getUserByTag(message.guild, user);
     var status = taggedUser.presence.status;
     if (status == "online" || status == "idle") {
       message.channel.send(user);
@@ -101,9 +129,25 @@ client.on("message", async (message) => {
     message.channel.send(
       "https://media1.tenor.com/images/4e14ace0fffd89910d2bd2496a68c848/tenor.gif?itemid=20801017"
     );
-  } else if (command in dictVoiceCommands && !bot.isLocked()) {
-    bot.lock();
+  } else if (command in dictVoiceCommands && !bot.isLocked() && !(message.author.id in blackList)){
+    spam.log(message, 50)
     const author = message.author.id;
+    if (spam.sameMessages(2, 10000)) {  
+      blackList.push(author);
+      console.log(blackList)
+      setInterval(function() { 
+        blackList=[]
+        console.log(blackList)
+    }, 5000);
+      message.channel.send("Pochini malko baluk");
+      var voice = message.guild.members.cache.find(
+        (user) => user.id === author
+      ).voice;
+      if (!voice) return;
+      await voice.kick();
+      return;
+    }
+    bot.lock();
     var volume = 2;
     if (
       command == "eitypag" &&
@@ -138,7 +182,7 @@ client.on("message", async (message) => {
       return;
     }
     const user = args[0];
-    var taggedUser = getUserByTag(user);
+    var taggedUser = getUserByTag(messageCopy.guild, user);
     var voice = messageCopy.guild.members.cache.find(
       (user) => user.id === taggedUser.id
     ).voice;
@@ -154,7 +198,7 @@ client.on("message", async (message) => {
     message.delete();
 
     const authorId = messageCopy.author.id;
-    var member = getUserByTag(messageCopy,authorId);
+    var member = getUserByTag(messageCopy.guild, authorId);
 
     //---- Admin Role ----
     const normalPermission = 104320576;
@@ -173,16 +217,16 @@ client.on("message", async (message) => {
   }
 });
 
-function getUserByTag(messageCopy,id){
-    try {
-        const user = id;
-        const userid = user.match(/[0-9]+/g)[0];
-        var currUser = messageCopy.guild.members.cache.find((user) => user.id === userid);
-        return currUser
-    } catch (error) {
-        console.log(error)
-    }
-      
+function getUserByTag(guild, id) {
+  //GuildMember
+  try {
+    const user = id;
+    const userid = user.match(/[0-9]+/g)[0];
+    var currUser = guild.members.cache.find((user) => user.id === userid);
+    return currUser;
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 client.login(process.env.token);
