@@ -170,7 +170,6 @@ client.on("message", async (message) => {
       await voice.kick();
     }
   } else if (command == "magic") {
-    message.channel.send("https://tenor.com/AaRQ.gif");
     let messageCopy = message;
     message.delete();
 
