@@ -1,4 +1,5 @@
 require("dotenv").config();
+const musicBot = require('./musicBot');
 var inf = require('./info');
 var spam = require('spamnya')
 var dani = require('./dani');
@@ -8,12 +9,11 @@ var daniTime = require('./timeDani');
 const Discord = require('discord.js');
 
 const { LockableClient } = require('./lockable-client');
+const { default: MusicBot } = require("./musicBot");
 
 const bot = new LockableClient();
 const client = new Discord.Client();
 const prefix = "-";
-var dictLosersQueue = { "378275337164816394": 0 };
-var dictWinnersQueue = { "378275337164816394": 0 };
 var dictAdmins = ["378275337164816394", "163416315892072448"];
 var blackList= []
 var dictVoiceCommands = {
@@ -32,43 +32,22 @@ var dictCommands = {
   motto: "Dani's life moto is - My life is a party, my home is the club!",
 };
 
+const musicBotCommands = ['p', 's', 'n'];
 
 client.once("ready", () => {
   console.log("DaniBot is online!");
 });
 
-// client.on("voiceStateUpdate", (oldState, newState) => {
-//   var voiceChannel = newState.channel;
-//   let oldChannel = oldState.channel 
-//   let newChannel = newState.channel
 
-//   if (oldChannel === newChannel) return;
-  
-//   if (
-//     oldState.member.user.id === "378275337164816394" &&
-//     voiceChannel &&
-//     !bot.isLocked()
-//   ) {
-//     bot.lock();
-//     voiceChannel
-//       .join() 
-//       .then((connection) => {
-//         const dispatcher = connection.play(dictVoiceCommands["papi"], {
-//           volume: 1,
-//         });
-//         dispatcher.on("finish", (end) => voiceChannel.leave());
-//         dispatcher.on("error", console.error);
-//       })
-//       .catch((err) => console.log(err));
-//     bot.unlock();
-//   }
-// });
 
 client.on("message", async (message) => {
   if (!message.content.startsWith(prefix) || message.author.bot) return;
   const args = message.content.slice(prefix.length).split(/ +/);
   const command = args.shift().toLowerCase();
-  if (command === "dani") {
+  if (musicBotCommands.includes(command)) {
+  musicBot.MusicBot(message);
+  }
+  else if (command === "dani") {
     message.channel.send(dani.lastBan());
   } else if (command === "t") {
     message.channel.send(daniTime.timeOfday());
@@ -228,3 +207,31 @@ function getUserByTag(guild, id) {
 }
 
 client.login(process.env.token);
+
+//play sound on join 
+// client.on("voiceStateUpdate", (oldState, newState) => {
+//   var voiceChannel = newState.channel;
+//   let oldChannel = oldState.channel 
+//   let newChannel = newState.channel
+
+//   if (oldChannel === newChannel) return;
+  
+//   if (
+//     oldState.member.user.id === "378275337164816394" &&
+//     voiceChannel &&
+//     !bot.isLocked()
+//   ) {
+//     bot.lock();
+//     voiceChannel
+//       .join() 
+//       .then((connection) => {
+//         const dispatcher = connection.play(dictVoiceCommands["papi"], {
+//           volume: 1,
+//         });
+//         dispatcher.on("finish", (end) => voiceChannel.leave());
+//         dispatcher.on("error", console.error);
+//       })
+//       .catch((err) => console.log(err));
+//     bot.unlock();
+//   }
+// });
