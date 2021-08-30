@@ -32,20 +32,18 @@ var dictCommands = {
   motto: "Dani's life moto is - My life is a party, my home is the club!",
 };
 
-const musicBotCommands = ['p', 's', 'n'];
+const musicBotCommands = ['p', 'c', 'n'];
 
 client.once("ready", () => {
   console.log("DaniBot is online!");
 });
-
-
 
 client.on("message", async (message) => {
   if (!message.content.startsWith(prefix) || message.author.bot) return;
   const args = message.content.slice(prefix.length).split(/ +/);
   const command = args.shift().toLowerCase();
   if (musicBotCommands.includes(command)) {
-  musicBot.MusicBot(message);
+    musicBot.MusicBot(message,bot);
   }
   else if (command === "dani") {
     message.channel.send(dani.lastBan());

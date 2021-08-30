@@ -4,13 +4,15 @@ const ytpl = require("ytpl");
 const prefix = "-";
 
 const queue = new Map();
-
-async function MusicBot(message) {
+let bot = undefined;
+async function MusicBot(message,_bot) {
+  bot = _bot;
   if (message.author.bot) return;
 //queue = <string,[songs]> 
   const serverQueue = queue.get(message.guild.id);
   // p --> play , n --> next, s--> clear
   if (message.content.startsWith(`${prefix}p`)) {
+    _bot.lock()
     execute(message, serverQueue);
     return;
   } else if (message.content.startsWith(`${prefix}n`)) {
@@ -18,6 +20,7 @@ async function MusicBot(message) {
     return;
   } else if (message.content.startsWith(`${prefix}c`)) {
     clear(message, serverQueue);
+    _bot.unlock()
     return;
   }
 }
@@ -33,18 +36,9 @@ async function execute(message, serverQueue) {
 
     //basic search by word
   var query = args[1];
-  if (!args[1].includes("https://")) {
-    args.shift();
-    query = args.join(" ");
-    const firstResult = await ytsr(query, { pages: 1 });
-    query = firstResult.items[0].url;
-    //console.log(firstResult.items[0]);
-    //console.log(firstResult.items[0].url);
-  } 
-  else if (query.includes("&list=")) {
+  
+  if (query.includes("&list=")) {
     const playlist = await ytpl(query);
-
-    
     if (!serverQueue) {
       const queueContruct = {
         textChannel: message.channel,
@@ -80,7 +74,15 @@ async function execute(message, serverQueue) {
 
   }
   //direct url
-  else if (ytdl.validateURL(query)) {
+  if (!args[1].includes("https://")) {
+    args.shift();
+    query = args.join(" ");
+    const firstResult = await ytsr(query, { pages: 1 });
+    query = firstResult.items[0].url;
+    //console.log(firstResult.items[0]);
+    //console.log(firstResult.items[0].url);
+  } 
+  if (ytdl.validateURL(query)) {
     const songInfo = await ytdl.getInfo(query);
     const song = {
       title: songInfo.videoDetails.title,
@@ -114,7 +116,8 @@ async function execute(message, serverQueue) {
       serverQueue.songs.push(song);
       return message.channel.send(`${song.title} has been added to the queue!`);
     }
-  } else {
+  } 
+  else {
     return message.channel.send("Prost li si kuv si ?");
   }
 }
@@ -148,6 +151,7 @@ function clear(message, serverQueue) {
 function play(guild, song) {
   const serverQueue = queue.get(guild.id);
   if (!song) {
+    bot.unlock()
     setInterval(function () {
       serverQueue.voiceChannel.leave();
     }, 300000);
