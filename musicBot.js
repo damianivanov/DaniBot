@@ -34,9 +34,8 @@ async function execute(message, serverQueue) {
       "You need to be in a voice channel to play music!"
     );
 
-    //basic search by word
   var query = args[1];
-  
+  //PLAYLIST
   if (query.includes("&list=")) {
     const playlist = await ytpl(query);
     if (!serverQueue) {
@@ -63,17 +62,16 @@ async function execute(message, serverQueue) {
     try {
       var connection = await voiceChannel.join();
       serverQueue.connection = connection;
+      message.channel.send(`${serverQueue.songs.length} queued up, **pomqr** `)
       play(message.guild, serverQueue.songs[0]);
-      return message.channel.send(`${playlist.items.length} queued up, pomqr`)
     } catch (err) {
       console.log(err);
       queue.delete(message.guild.id);
-      return message. channel.send(err);
+     // return message.channel.send(err);
     }
-    
-
+    return
   }
-  //direct url
+  //SEARCH BY WORDS
   if (!args[1].includes("https://")) {
     args.shift();
     query = args.join(" ");
@@ -82,6 +80,7 @@ async function execute(message, serverQueue) {
     //console.log(firstResult.items[0]);
     //console.log(firstResult.items[0].url);
   } 
+  //DIRECT URL
   if (ytdl.validateURL(query)) {
     const songInfo = await ytdl.getInfo(query);
     const song = {
@@ -117,6 +116,7 @@ async function execute(message, serverQueue) {
       return message.channel.send(`${song.title} has been added to the queue!`);
     }
   } 
+
   else {
     return message.channel.send("Prost li si kuv si ?");
   }
@@ -129,7 +129,11 @@ function skip(message, serverQueue) {
     );
   if (!serverQueue)
     return message.channel.send("TI PROST LI IS???? NE VIJDASH LI CHE NQMA POVECHE PESNI!");
-  serverQueue.connection.dispatcher.end();
+  
+    serverQueue.songs.shift();
+    play(message.guild, serverQueue.songs[0]);
+    //serverQueue.connection.dispatcher.end();
+    //queue.delete(message.guild.id)
 }
 
 function clear(message, serverQueue) {
@@ -142,17 +146,26 @@ function clear(message, serverQueue) {
     return message.channel.send("TI PROST LI IS???? NE VIJDASH LI CHE NQMA POVECHE PESNI!");
 
   serverQueue.songs = [];
-  serverQueue.connection.dispatcher.end();
-  setInterval(function () {
-    serverQueue.voiceChannel.leave();
-  }, 300000);
+  message.channel.send("The queue has been cleared");
+  serverQueue.connection.dispatcher.end(); //<---
+  queue.delete(message.guild.id);
+  try {
+    setInterval(function () {
+      message.channel.send(" **Later biiiitches** ");
+      serverQueue.voiceChannel.leave();
+    }, 300000);
+  } catch (error) {
+    console.error(error)
+  }
+  
 }
 
 function play(guild, song) {
   const serverQueue = queue.get(guild.id);
-  if (!song) {
+  if (!serverQueue || !serverQueue.songs || !song) {
     bot.unlock()
     setInterval(function () {
+      serverQueue.textChannel.send(" **Later biiiitches** ");
       serverQueue.voiceChannel.leave();
     }, 300000);
     queue.delete(guild.id);
