@@ -162,7 +162,7 @@ function clear(message, serverQueue) {
 
 function play(guild, song) {
   const serverQueue = queue.get(guild.id);
-  if (!serverQueue || !serverQueue.songs || !song) {
+  if (!serverQueue || (!serverQueue.songs && !song)) {
     bot.unlock()
     setInterval(function () {
       serverQueue.textChannel.send(" **Later biiiitches** ");
