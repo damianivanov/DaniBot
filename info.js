@@ -2,12 +2,14 @@
 module.exports = { info: function(){
 
     const commands = 'Supported Commands:\n'+
+    
 
     '------------MUSIC SECTION------------\n'+
     '-p {valid url,song name,playlist}\n'+
     '-n {next song}\n'+
     '-c {clears the queue}\n'+
     '-------------------------------------\n'+
+    '-kofti - kak she e kofti e\n'+
     '-Dani - Days since last ban\n' + 
     '-tilted - Article for avoiding tilt \n' + 
     '-cringe - C R I N G E (Top 5 An*mes)\n' +
