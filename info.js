@@ -2,7 +2,6 @@
 module.exports = { info: function(){
 
     const commands = 'Supported Commands:\n'+
-    
 
     '------------MUSIC SECTION------------\n'+
     '-p {valid url,song name,playlist}\n'+
