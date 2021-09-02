@@ -44,11 +44,7 @@ client.on("message", async (message) => {
   const args = message.content.slice(prefix.length).split(/ +/);
   const command = args.shift().toLowerCase();
   if (musicBotCommands.includes(command)) {
-    try {
-      musicBot.MusicBot(message,bot);
-    } catch (error) {
-      console.error(error);
-    }
+    musicBot.MusicBot(message,bot);
   }
   else if (command === "dani") {
     message.channel.send(dani.lastBan());
