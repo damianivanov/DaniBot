@@ -130,12 +130,9 @@ function skip(message, serverQueue) {
   if (!serverQueue)
     return message.channel.send("TI PROST LI IS???? NE VIJDASH LI CHE NQMA POVECHE PESNI!");
   
-    if (serverQueue.connection.dispatcher){
-      serverQueue.connection.dispatcher.end();
-    }
-    // serverQueue.songs.shift();
-    // serverQueue.connection.dispatcher.end();
-    // play(message.guild, serverQueue.songs[0]);
+    serverQueue.songs.shift();
+    play(message.guild, serverQueue.songs[0]);
+    //serverQueue.connection.dispatcher.end();
     //queue.delete(message.guild.id)
 }
 
@@ -151,12 +148,11 @@ function clear(message, serverQueue) {
   serverQueue.songs = [];
   message.channel.send("The queue has been cleared");
   serverQueue.connection.dispatcher.end(); //<---
-  
+  queue.delete(message.guild.id);
   try {
-    setTimeout(function () {
+    setInterval(function () {
       message.channel.send(" **Later biiiitches** ");
       serverQueue.voiceChannel.leave();
-      queue.delete(message.guild.id);
     }, 300000);
   } catch (error) {
     console.error(error)
@@ -166,25 +162,25 @@ function clear(message, serverQueue) {
 
 function play (guild, song) {
   const serverQueue = queue.get(guild.id);
-  if (!serverQueue || (serverQueue.songs.length==0 && !song)) {
+  if (!serverQueue || (!serverQueue.songs && !song)) {
     bot.unlock()
-  setTimeout(function () {
+    setInterval(function () {
       serverQueue.textChannel.send(" **Later biiiitches** ");
       serverQueue.voiceChannel.leave();
-      queue.delete(guild.id);
-    }, 300000);
+    }, 10000);
+    queue.delete(guild.id);
     return;
-  }else{
-    const dispatcher = serverQueue.connection
+  }
+
+  const dispatcher = serverQueue.connection 
     .play(ytdl(song.url))
     .on("finish", () => {
       serverQueue.songs.shift();
       play(guild, serverQueue.songs[0]);
     })
     .on("error", (error) => console.error(error));
-    dispatcher.setVolumeLogarithmic(serverQueue.volume / 5);
-    serverQueue.textChannel.send(`V momenta bi4i: **${song.title}**`);
-  }
+  dispatcher.setVolumeLogarithmic(serverQueue.volume / 5);
+  serverQueue.textChannel.send(`V momenta bi4i: **${song.title}**`);
 }
 
 module.exports.MusicBot = MusicBot;
