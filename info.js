@@ -24,6 +24,7 @@ module.exports = { info: function(){
     '-imali \n' +
     '-eitypag \n' +
     '-nightmare \n' +
+    '-badboy - Kak da bydete bad booyz\n'+
     ''
     ;
     return commands;

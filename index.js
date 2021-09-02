@@ -22,6 +22,7 @@ var dictVoiceCommands = {
   eitypag: "./ei_typag.mp3",
   papi: "./chupapi_short.mp3",
   kofti: "./kaksheekofti.mp3",
+  badboy: "./badboy.mp3",
 };
 
 var dictCommands = {
