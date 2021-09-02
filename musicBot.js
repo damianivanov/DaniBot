@@ -160,19 +160,19 @@ function clear(message, serverQueue) {
   
 }
 
-function play(guild, song) {
+function play (guild, song) {
   const serverQueue = queue.get(guild.id);
   if (!serverQueue || (!serverQueue.songs && !song)) {
     bot.unlock()
     setInterval(function () {
       serverQueue.textChannel.send(" **Later biiiitches** ");
       serverQueue.voiceChannel.leave();
-    }, 300000);
+    }, 10000);
     queue.delete(guild.id);
     return;
   }
 
-  const dispatcher = serverQueue.connection
+  const dispatcher = serverQueue.connection 
     .play(ytdl(song.url))
     .on("finish", () => {
       serverQueue.songs.shift();
