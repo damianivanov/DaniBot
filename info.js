@@ -8,6 +8,7 @@ module.exports = { info: function(){
     '-n {next song}\n'+
     '-c {clears the queue}\n'+
     '-------------------------------------\n'+
+    '-kofti - kak she e kofti e\n'+
     '-Dani - Days since last ban\n' + 
     '-tilted - Article for avoiding tilt \n' + 
     '-cringe - C R I N G E (Top 5 An*mes)\n' +
