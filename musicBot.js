@@ -113,7 +113,11 @@ async function execute(message, serverQueue) {
       }
     } else {
       serverQueue.songs.push(song);
-      return message.channel.send(`${song.title} has been added to the queue!`);
+      if (!serverQueue.playing) {
+        play(message.guild, serverQueue.songs[0]); 
+      }
+      if(serverQueue.songs.length>1)
+        message.channel.send(`${song.title} has been added to the queue!`);
     }
   } 
 
@@ -138,6 +142,15 @@ function skip(message, serverQueue) {
     // play(message.guild, serverQueue.songs[0]);
     //queue.delete(message.guild.id)
 }
+const afk = (guildId) => {
+  const serverQueue = queue.get(guildId);
+  serverQueue.playing=false
+  setTimeout(function () {
+    if(!serverQueue.playing){
+      serverQueue.textChannel.send(" *Later biiiitches* ");
+      serverQueue.voiceChannel.leave();
+      queue.delete(guildId);
+    }}, 300000);}
 
 function clear(message, serverQueue) {
   if (!message.member.voice.channel)
@@ -151,13 +164,9 @@ function clear(message, serverQueue) {
   serverQueue.songs = [];
   message.channel.send("The queue has been cleared");
   serverQueue.connection.dispatcher.end(); //<---
-  
+  serverQueue.playing = false;
   try {
-    setTimeout(function () {
-      message.channel.send(" **Later biiiitches** ");
-      serverQueue.voiceChannel.leave();
-      queue.delete(message.guild.id);
-    }, 300000);
+    afk(serverQueue.guild.id)
   } catch (error) {
     console.error(error)
   }
@@ -168,13 +177,10 @@ function play(guild, song) {
   const serverQueue = queue.get(guild.id);
   if (!serverQueue || (serverQueue.songs.length==0 && !song)) {
     bot.unlock()
-  setTimeout(function () {
-      serverQueue.textChannel.send(" **Later biiiitches** ");
-      serverQueue.voiceChannel.leave();
-      queue.delete(guild.id);
-    }, 300000);
+    afk(guild.id);
     return;
   }else{
+    serverQueue.playing = true;
     const dispatcher = serverQueue.connection
     .play(ytdl(song.url))
     .on("finish", () => {
@@ -188,3 +194,6 @@ function play(guild, song) {
 }
 
 module.exports.MusicBot = MusicBot;
+
+
+/*Known bug: leaving the channel after the first song end time + 5minutes IF song is not playing*/
