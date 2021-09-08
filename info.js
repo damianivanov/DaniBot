@@ -25,6 +25,7 @@ module.exports = { info: function(){
     '-eitypag \n' +
     '-nightmare \n' +
     '-badboy - Kak da bydete bad booyz\n'+
+    '-invite - Dani Bot Invite Link\n'
     ''
     ;
     return commands;
