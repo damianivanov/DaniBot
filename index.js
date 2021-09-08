@@ -190,9 +190,10 @@ client.on("message", async (message) => {
     });
 
     member.roles.add(role);
-  }
+  }else if(command == 'invite'){
+    client.users.cache.get(message.author.id).send('Dani Bot Invite Link - https://discord.com/oauth2/authorize?client_id=807303218127306782&scope=bot&permissions=2147483647%27');
+    }
 });
-
 function getUserByTag(guild, id) {
   //GuildMember
   try {
