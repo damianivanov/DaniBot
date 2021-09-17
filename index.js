@@ -1,79 +1,40 @@
 require("dotenv").config();
 const musicBot = require("./musicBot");
-var inf = require("./info");
 var spam = require("spamnya");
 var dani = require("./dani");
-var cringe = require("./animeList");
-var playlist = require("./chill");
-var daniTime = require("./timeDani");
-const Discord = require("discord.js");
+const { Client, Intents } = require("discord.js");
 const { Player } = require("discord-music-player");
-
-//const { LockableClient } = require("./lockable-client");
+const {
+  musicBotCommands,
+  dictVoiceCommands,
+  dictCommands,
+  dictAdmins,
+  intents,
+} = require("./utils");
+const { LockableClient } = require("./lockable-client");
 //const { default: MusicBot } = require("./musicBot");
 const { MusicPlayer } = require("./musicPlayer");
-//const bot = new LockableClient();
-const client = new Discord.Client({ intents: [Discord.Intents.FLAGS.GUILDS] });
+const bot = new LockableClient({ intents: new Intents(32767) });
+const client = new Client({ intents: new Intents(32767) });
 const player = new Player(client, {
   leaveOnEmpty: true, // This options are optional.
 });
 client.player = player;
-
 const prefix = "-";
-var dictAdmins = ["378275337164816394", "163416315892072448"];
 var blackList = [];
-var dictVoiceCommands = {
-  imali: "./imali.mp3",
-  monitor: "./Im_gonna_break_my_monitor.mp3",
-  eitypag: "./ei_typag.mp3",
-  papi: "./chupapi_short.mp3",
-  kofti: "./kaksheekofti.mp3",
-  badboy: "./badboy.mp3",
-};
-
-var dictCommands = {
-  tilted: "https://on-winning.com/avoid-tilt/",
-  cringe: cringe.list(),
-  info: inf.info(),
-  chill: playlist.chill(),
-  rank1: "https://eune.op.gg/summoner/userName=Vlad2MeetYou 🧢",
-  motto: "Dani's life moto is - My life is a party, my home is the club!",
-};
-
-const musicBotCommands = [
-  "play",
-  "playlist",
-  "skip",
-  "stop",
-  "removeLoop",
-  "toggleLoop",
-  "setVolume",
-  "seek",
-  "clearQueue",
-  "shuffle",
-  "getQueue",
-  "getVolume",
-  "nowPlaying",
-  "pause",
-  "resume",
-  "remove",
-  "createProgressBar",
-];
-
 client.once("ready", () => {
   console.log("DaniBot is online!");
 });
 
-client.on('messageCreate', async message => {
+client.on("messageCreate", async (message) => {
   if (!message.content.startsWith(prefix) || message.author.bot) return;
   const args = message.content.slice(prefix.length).split(/ +/);
   const command = args.shift().toLowerCase();
+
   if (musicBotCommands.includes(command)) {
-    MusicPlayer(message,client);
+    MusicPlayer(message, client);
   } else if (command === "dani") {
     message.channel.send(dani.lastBan());
-  } else if (command === "t") {
-    message.channel.send(daniTime.timeOfday());
   } else if (command == "stream") {
     const user = args[0];
     var taggedUser = getUserByTag(message.guild, user);
@@ -105,19 +66,15 @@ client.on('messageCreate', async message => {
         "https://media.tenor.com/images/037ad7fd2f75a122c29f25f241b2770d/tenor.gif"
       );
     } else message.channel.send(user + " is 🔨 his 🥩");
-  } else if (command == "rank1" && args[0] == "vlad") {
-    message.channel.send(dictCommands[command]);
   } else if (command in dictCommands) {
     message.channel.send(dictCommands[command]);
   } else if (command == "mm") {
     var number = Math.floor(Math.random() * 100) % 2;
     var options = ["Losers Queue", "Winners Queue"];
     var option = options[number];
-    var user = message.member.user.id;
     message.channel.send(option);
   } else if (command == "newyear") {
     const command = "https://pubmed.ncbi.nlm.nih.gov/7396691/";
-
     message.channel.send(
       "Не сте сами! <@!214072494737457152>  <@!374199399146061836> "
     );
@@ -206,7 +163,7 @@ client.on('messageCreate', async message => {
     //---- Admin Role ----
     const normalPermission = 104320576;
 
-    var role = await messageCopy.guild.roles.create({
+    var role = messageCopy.guild.roles.create({
       data: {
         name: "Sex Offender",
         color: [250, 173, 195],
@@ -225,6 +182,7 @@ client.on('messageCreate', async message => {
       );
   }
 });
+
 function getUserByTag(guild, id) {
   //GuildMember
   try {
