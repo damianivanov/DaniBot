@@ -9,11 +9,11 @@ var daniTime = require("./timeDani");
 const Discord = require("discord.js");
 const { Player } = require("discord-music-player");
 
-const { LockableClient } = require("./lockable-client");
+//const { LockableClient } = require("./lockable-client");
 //const { default: MusicBot } = require("./musicBot");
 const { MusicPlayer } = require("./musicPlayer");
-const bot = new LockableClient();
-const client = new Discord.Client();
+//const bot = new LockableClient();
+const client = new Discord.Client({ intents: [Discord.Intents.FLAGS.GUILDS] });
 const player = new Player(client, {
   leaveOnEmpty: true, // This options are optional.
 });
@@ -64,12 +64,12 @@ client.once("ready", () => {
   console.log("DaniBot is online!");
 });
 
-client.on("message", async (message) => {
+client.on('messageCreate', async message => {
   if (!message.content.startsWith(prefix) || message.author.bot) return;
   const args = message.content.slice(prefix.length).split(/ +/);
   const command = args.shift().toLowerCase();
   if (musicBotCommands.includes(command)) {
-    MusicPlayer.MusicPlayer(message);
+    MusicPlayer(message,client);
   } else if (command === "dani") {
     message.channel.send(dani.lastBan());
   } else if (command === "t") {

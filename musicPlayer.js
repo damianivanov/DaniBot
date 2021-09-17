@@ -1,7 +1,7 @@
 const { RepeatMode } = require("discord-music-player");
 
-async function MusicPlayer(message){
-    const args = message.content.slice(settings.prefix.length).trim().split(/ +/g);
+async function musicPlayer(message,client){
+    const args = message.content.slice(1).trim().split(/ +/g);
     const command = args.shift();
     let guildQueue = client.player.getQueue(message.guild.id);
 
@@ -92,4 +92,4 @@ async function MusicPlayer(message){
     
 }
 
-module.exports.MusicPlayer = MusicPlayer;
+module.exports.MusicPlayer = musicPlayer;
