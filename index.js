@@ -1,21 +1,27 @@
 require("dotenv").config();
-const musicBot = require('./musicBot');
-var inf = require('./info');
-var spam = require('spamnya')
-var dani = require('./dani');
-var cringe = require('./animeList');
-var playlist = require('./chill');
-var daniTime = require('./timeDani');
-const Discord = require('discord.js');
+const musicBot = require("./musicBot");
+var inf = require("./info");
+var spam = require("spamnya");
+var dani = require("./dani");
+var cringe = require("./animeList");
+var playlist = require("./chill");
+var daniTime = require("./timeDani");
+const Discord = require("discord.js");
+const { Player } = require("discord-music-player");
 
-const { LockableClient } = require('./lockable-client');
-const { default: MusicBot } = require("./musicBot");
-
+const { LockableClient } = require("./lockable-client");
+//const { default: MusicBot } = require("./musicBot");
+const { MusicPlayer } = require("./musicPlayer");
 const bot = new LockableClient();
 const client = new Discord.Client();
+const player = new Player(client, {
+  leaveOnEmpty: true, // This options are optional.
+});
+client.player = player;
+
 const prefix = "-";
 var dictAdmins = ["378275337164816394", "163416315892072448"];
-var blackList= []
+var blackList = [];
 var dictVoiceCommands = {
   imali: "./imali.mp3",
   monitor: "./Im_gonna_break_my_monitor.mp3",
@@ -34,7 +40,25 @@ var dictCommands = {
   motto: "Dani's life moto is - My life is a party, my home is the club!",
 };
 
-const musicBotCommands = ['p', 'c', 'n'];
+const musicBotCommands = [
+  "play",
+  "playlist",
+  "skip",
+  "stop",
+  "removeLoop",
+  "toggleLoop",
+  "setVolume",
+  "seek",
+  "clearQueue",
+  "shuffle",
+  "getQueue",
+  "getVolume",
+  "nowPlaying",
+  "pause",
+  "resume",
+  "remove",
+  "createProgressBar",
+];
 
 client.once("ready", () => {
   console.log("DaniBot is online!");
@@ -45,9 +69,8 @@ client.on("message", async (message) => {
   const args = message.content.slice(prefix.length).split(/ +/);
   const command = args.shift().toLowerCase();
   if (musicBotCommands.includes(command)) {
-    musicBot.MusicBot(message,bot);
-  }
-  else if (command === "dani") {
+    MusicPlayer.MusicPlayer(message);
+  } else if (command === "dani") {
     message.channel.send(dani.lastBan());
   } else if (command === "t") {
     message.channel.send(daniTime.timeOfday());
@@ -108,14 +131,18 @@ client.on("message", async (message) => {
     message.channel.send(
       "https://media1.tenor.com/images/4e14ace0fffd89910d2bd2496a68c848/tenor.gif?itemid=20801017"
     );
-  } else if (command in dictVoiceCommands && !bot.isLocked() && !(message.author.id in blackList)){
-    spam.log(message, 50)
+  } else if (
+    command in dictVoiceCommands &&
+    !bot.isLocked() &&
+    !(message.author.id in blackList)
+  ) {
+    spam.log(message, 50);
     const author = message.author.id;
-    if (spam.sameMessages(2, 10000)) {  
+    if (spam.sameMessages(2, 10000)) {
       blackList.push(author);
-      setInterval(function() { 
-        blackList=[]
-    }, 10000);
+      setInterval(function () {
+        blackList = [];
+      }, 10000);
       message.channel.send("Pochini malko baluk");
       var voice = message.guild.members.cache.find(
         (user) => user.id === author
@@ -190,9 +217,13 @@ client.on("message", async (message) => {
     });
 
     member.roles.add(role);
-  }else if(command == 'invite'){
-    client.users.cache.get(message.author.id).send('Dani Bot Invite Link - https://discord.com/oauth2/authorize?client_id=807303218127306782&scope=bot&permissions=2147483647%27');
-    }
+  } else if (command == "invite") {
+    client.users.cache
+      .get(message.author.id)
+      .send(
+        "Dani Bot Invite Link - https://discord.com/oauth2/authorize?client_id=807303218127306782&scope=bot&permissions=2147483647%27"
+      );
+  }
 });
 function getUserByTag(guild, id) {
   //GuildMember
@@ -208,14 +239,14 @@ function getUserByTag(guild, id) {
 
 client.login(process.env.token);
 
-//play sound on join 
+//play sound on join
 // client.on("voiceStateUpdate", (oldState, newState) => {
 //   var voiceChannel = newState.channel;
-//   let oldChannel = oldState.channel 
+//   let oldChannel = oldState.channel
 //   let newChannel = newState.channel
 
 //   if (oldChannel === newChannel) return;
-  
+
 //   if (
 //     oldState.member.user.id === "378275337164816394" &&
 //     voiceChannel &&
@@ -223,7 +254,7 @@ client.login(process.env.token);
 //   ) {
 //     bot.lock();
 //     voiceChannel
-//       .join() 
+//       .join()
 //       .then((connection) => {
 //         const dispatcher = connection.play(dictVoiceCommands["papi"], {
 //           volume: 1,
