@@ -1,23 +1,26 @@
-var cringe = require("./animeList");
-var inf = require("./info");
-var playlist = require("./chill");
+var inf = require("./commands/infoCommand");
+var playlist = require("./commands/chillCommand");
+const { mm } = require("./commands/helperFunctions");
 
 const dictVoiceCommands = {
-  imali: "./imali.mp3",
-  monitor: "./Im_gonna_break_my_monitor.mp3",
-  eitypag: "./ei_typag.mp3",
-  papi: "./chupapi_short.mp3",
-  kofti: "./kaksheekofti.mp3",
-  badboy: "./badboy.mp3",
+  imali: "./sounds/imali.mp3",
+  monitor: "./sounds/Im_gonna_break_my_monitor.mp3",
+  eitypag: "./sounds/ei_typag.mp3",
+  papi: "./sounds/chupapi_short.mp3",
+  kofti: "./sounds/kaksheekofti.mp3",
+  badboy: "./sounds/badboy.mp3",
 };
 
-const dictCommands = {
-  tilted: "https://on-winning.com/avoid-tilt/",
-  cringe: cringe.list(),
+var dictCommands = {
+  nightmare:
+    "https://media1.tenor.com/images/4e14ace0fffd89910d2bd2496a68c848/tenor.gif?itemid=20801017",
   info: inf.info(),
   chill: playlist.chill(),
-  rank1: "https://eune.op.gg/summoner/userName=Vlad2MeetYou 🧢",
   motto: "Dani's life moto is - My life is a party, my home is the club!",
+  newyear:
+    "Не сте сами! <@!214072494737457152>  <@!374199399146061836> " +
+    " https://pubmed.ncbi.nlm.nih.gov/7396691/",
+  pochwame: { files: ["./start.png"] },
 };
 const musicBotCommands = [
   "play",
