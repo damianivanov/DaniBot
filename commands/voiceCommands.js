@@ -13,11 +13,12 @@ const { dictVoiceCommands, dictAdmins } = require("../utils");
 const spam = require("spamnya");
 const player = createAudioPlayer();
 
-function playSong(sound) {
+function playSong(sound,volume) {
 	const resource = createAudioResource(sound, {
-		inputType: StreamType.Arbitrary,
+		inputType: StreamType.Arbitrary
 	});
 
+  resource.volume=volume
 	player.play(resource);
 
 	return entersState(player, AudioPlayerStatus.Playing, 5e3);
@@ -67,7 +68,7 @@ module.exports = {
         try {
           const connection = await connectToChannel(channel);
           connection.subscribe(player);
-          playSong(dictVoiceCommands[command])
+          playSong(dictVoiceCommands[command],volume)
           message.reply('Playing now!');
         } catch (error) {
           console.error(error);
