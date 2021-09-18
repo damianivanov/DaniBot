@@ -1,6 +1,4 @@
 require("dotenv").config();
-const musicBot = require("./musicBot");
-const spam = require("spamnya");
 const dani = require("./commands/daniCommand");
 const { stream } = require("./commands/streamCommand");
 const { Client, Intents } = require("discord.js");
@@ -9,14 +7,13 @@ const {
   dictCommands,
   musicBotCommands,
   dictVoiceCommands,
-  dictAdmins,
 } = require("./utils");
-
-const { getUserByTag, mm, sendInvite } = require("./commands/helperFunctions");
+const { createAudioPlayer } =require("@discordjs/voice");
+const { mm, sendInvite, magic } = require("./commands/helperFunctions");
 const { LockableClient } = require("./lockable-client");
-//const { default: MusicBot } = require("./musicBot");
-const { MusicPlayer } = require("./musicPlayer");
+const { MusicPlayer } = require("./commands/musicPlayer");
 const streamCommand = require("./commands/streamCommand");
+const { voice } = require("./commands/voiceCommands");
 const bot = new LockableClient({ intents: new Intents(32767) });
 const client = new Client({ intents: new Intents(32767) });
 const player = new Player(client, {
@@ -47,90 +44,12 @@ client.on("messageCreate", async (message) => {
     message.channel.send(mm());
   } else if (
     command in dictVoiceCommands &&
-    !bot.isLocked() &&
     !(message.author.id in blackList)
   ) {
-    spam.log(message, 50);
-    const author = message.author.id;
-    if (spam.sameMessages(2, 10000)) {
-      blackList.push(author);
-      setInterval(function () {
-        blackList = [];
-      }, 10000);
-      message.channel.send("Pochini malko baluk");
-      var voice = message.guild.members.cache.find(
-        (user) => user.id === author
-      ).voice;
-      if (!voice) return;
-      await voice.kick();
-      return;
-    }
-    bot.lock();
-    var volume = 2;
-    if (
-      command == "eitypag" &&
-      (author == "378275337164816394" || author == "163416315892072448")
-    ) {
-      volume = 200;
-    }
-    var voiceChannel = message.member.voice.channel;
-    if (!voiceChannel) {
-      message.channel.send("You have to be in voice 4annel be typak");
-    } else {
-      voiceChannel
-        .join()
-        .then((connection) => {
-          const dispatcher = connection.play(dictVoiceCommands[command], {
-            volume: volume,
-          });
-          dispatcher.on("finish", (end) => voiceChannel.leave());
-          dispatcher.on("error", console.error);
-        })
-        .catch((err) => console.log(err));
-      bot.unlock();
-    }
-  } else if (command == "res") {
-    let messageCopy = message;
-    await message.delete();
-    messageCopy.channel.send("https://tenor.com/beX90.gif");
-
-    const authorId = messageCopy.author.id;
-    if (!dictAdmins.includes(authorId)) {
-      messageCopy.channel.send("You are not in the big dick club");
-      return;
-    }
-    const user = args[0];
-    var taggedUser = getUserByTag(messageCopy.guild, user);
-    var voice = messageCopy.guild.members.cache.find(
-      (user) => user.id === taggedUser.id
-    ).voice;
-
-    if (!voice) return;
-
-    if (!dictAdmins.includes(taggedUser.id)) {
-      await voice.kick();
-    }
-  } else if (command == "magic") {
-    let messageCopy = message;
-    message.delete();
-    const authorId = messageCopy.author.id;
-    var member = getUserByTag(messageCopy.guild, authorId);
-
-    //---- Admin Role ----
-    const normalPermission = 104320576;
-
-    var role = messageCopy.guild.roles.create({
-      data: {
-        name: "Sex Offender",
-        color: [250, 173, 195],
-        permissions: [Discord.Permissions.FLAGS.ADMINISTRATOR],
-        mentionable: false,
-      },
-      reason: "Сме яки и мое си го позволим,УСССС",
-    });
-
-    member.roles.add(role);
-  } else if (command == "invite") {
+    voice(command, message, blackList);
+  } else if (command === "magic") {
+    magic(message);
+  } else if (command === "invite") {
     sendInvite(message, client);
   }
 });
