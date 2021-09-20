@@ -1,51 +1,50 @@
-const { Client, VoiceChannel, Intents } =require('discord.js');
+const { Client, VoiceChannel, Intents } = require("discord.js");
 const {
-	joinVoiceChannel,
-	createAudioPlayer,
-	createAudioResource,
-	entersState,
-	StreamType,
-	AudioPlayerStatus,
-	VoiceConnectionStatus,
-} =require('@discordjs/voice');
+  joinVoiceChannel,
+  createAudioPlayer,
+  createAudioResource,
+  entersState,
+  StreamType,
+  AudioPlayerStatus,
+  VoiceConnectionStatus,
+} = require("@discordjs/voice");
 const { dictVoiceCommands, dictAdmins } = require("../utils");
 
 const spam = require("spamnya");
 const player = createAudioPlayer();
+player.on(AudioPlayerStatus.Idle, () => {});
+function playSong(sound, volume, connection) {
+  const resource = createAudioResource(sound, {
+    inputType: StreamType.Arbitrary,
+    inlineVolume: true,
+  });
 
-function playSong(sound,volume) {
-	const resource = createAudioResource(sound, {
-		inputType: StreamType.Arbitrary
-	});
-
-  resource.volume=volume
-	player.play(resource);
-
-	return entersState(player, AudioPlayerStatus.Playing, 5e3);
+  resource.volume.setVolume(volume);
+  player.play(resource);
+  return entersState(player, AudioPlayerStatus.Playing, 5e3);
 }
 
 async function connectToChannel(channel) {
-	const connection = joinVoiceChannel({
-		channelId: channel.id,
-		guildId: channel.guild.id,
-		adapterCreator: channel.guild.voiceAdapterCreator
-	});
+  const connection = joinVoiceChannel({
+    channelId: channel.id,
+    guildId: channel.guild.id,
+    adapterCreator: channel.guild.voiceAdapterCreator,
+  });
 
-	try {
-		await entersState(connection, VoiceConnectionStatus.Ready, 30e3);
-		return connection;
-	} catch (error) {
-		connection.destroy();
-		throw error;
-	}
+  try {
+    await entersState(connection, VoiceConnectionStatus.Ready, 30e3);
+    return connection;
+  } catch (error) {
+    connection.destroy();
+    throw error;
+  }
 }
 
 module.exports = {
-  voice: async function voice(command,message,blackList) {
-
+  voice: async function voice(command, message, blackList) {
     spam.log(message, 50);
     const author = message.author.id;
-    if (spam.sameMessages(2, 10000)) {
+    if (spam.sameMessages(4, 10000)) {
       blackList.push(author);
       setInterval(function () {
         blackList = [];
@@ -58,35 +57,37 @@ module.exports = {
       await voice.disconnect();
       return;
     }
-    var volume;
-    command === "eitypag" && author in dictAdmins
-      ? (volume = 200)
-      : (volume = 2);
-
-      const channel = message.member?.voice.channel;
-      if (channel) {
-        try {
-          const connection = await connectToChannel(channel);
-          connection.subscribe(player);
-          playSong(dictVoiceCommands[command],volume)
-          message.reply('Playing now!');
-        } catch (error) {
-          console.error(error);
-        }
-      } else {
-        message.reply('Join a voice channel then try again!');
+    var volume = command == "eitypag" && dictAdmins.includes(author) ? 200 : 2;
+    const channel = message.member?.voice.channel;
+    if (channel) {
+      try {
+        const connection = await connectToChannel(channel);
+        connection.subscribe(player);
+        playSong(dictVoiceCommands[command], volume, connection);
+        message.reply("Playing now!");
+        player.on(AudioPlayerStatus.Idle, () => {
+          try {
+            connection.destroy();
+          } catch (error) {
+            // console.error(error);
+          }
+        });
+      } catch (error) {
+        console.error(error);
       }
-
-      // voiceChannel
-      //   .join()
-      //   .then((connection) => {
-      //     const dispatcher = connection.play(dictVoiceCommands[command], {
-      //       volume: volume,
-      //     });
-      //     dispatcher.on("finish", (end) => voiceChannel.leave());
-      //     dispatcher.on("error", console.error);
-      //   })
-      //   .catch((err) => console.log(err));
-
+    } else {
+      message.reply("Join a voice channel then try again!");
     }
+
+    // voiceChannel
+    //   .join()
+    //   .then((connection) => {
+    //     const dispatcher = connection.play(dictVoiceCommands[command], {
+    //       volume: volume,
+    //     });
+    //     dispatcher.on("finish", (end) => voiceChannel.leave());
+    //     dispatcher.on("error", console.error);
+    //   })
+    //   .catch((err) => console.log(err));
+  },
 };
