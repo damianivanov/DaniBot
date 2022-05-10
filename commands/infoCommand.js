@@ -20,6 +20,7 @@ module.exports = {
       "-eitypag \n" +
       "-nightmare \n" +
       "-badboy - Kak da bydete bad booyz\n" +
+      "kur za cska\n"+
       "-invite - Dani Bot Invite Link\n";
     ("");
     return commands;
