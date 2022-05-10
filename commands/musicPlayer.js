@@ -14,6 +14,7 @@ async function musicPlayer(message,client){
                 queue.stop();
         });
     // console.log(queue.songs);
+    
     //  message.channel.send(`zareden banger: ${song.name}`);
     
         const songEmbed = new MessageEmbed()
