@@ -56,7 +56,7 @@ client.on("messageCreate", async (message) => {
 
 client.login(process.env.token);
 
-//play sound on join
+//play sound  on join
 // client.on("voiceStateUpdate", (oldState, newState) => {
 //   var voiceChannel = newState.channel;
 //   let oldChannel = oldState.channel
