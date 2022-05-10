@@ -1,4 +1,5 @@
 const { RepeatMode } = require("discord-music-player");
+const { MessageEmbed } = require('discord.js');
 
 async function musicPlayer(message,client){
     const args = message.content.slice(1).trim().split(/ +/g);
@@ -12,6 +13,28 @@ async function musicPlayer(message,client){
             if(!guildQueue)
                 queue.stop();
         });
+    // console.log(queue.songs);
+    //  message.channel.send(`zareden banger: ${song.name}`);
+    
+        const songEmbed = new MessageEmbed()
+	.setColor('#0099ff')
+	.setTitle(song.name)
+	.setURL(song.url)
+	.setThumbnail(song.thumbnail)
+	// .addFields(
+	// 	{ name: 'Regular field title', value: 'Some value here' },
+	// 	{ name: '\u200B', value: '\u200B' },
+	// 	{ name: 'Inline field title', value: 'Some value here', inline: true },
+	// 	{ name: 'Inline field title', value: 'Some value here', inline: true },
+	// )
+	// .addField('Inline field title', 'Some value here', true)
+	.setImage(song.thumbnail)
+	.setTimestamp()
+	.setFooter('ZAREDEN BANGER')
+    ;
+
+message.channel.send({ embeds: [songEmbed] });
+
     }
 
     else if(command === 'playlist') {
