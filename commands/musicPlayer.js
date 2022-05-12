@@ -28,7 +28,7 @@ async function musicPlayer(message,client){
 	// 	{ name: 'Inline field title', value: 'Some value here', inline: true },
 	// 	{ name: 'Inline field title', value: 'Some value here', inline: true },
 	// )
-	// .addField('Inline field title', 'Some value here', true)
+	.addField('Duration:', `${song.duration}`, true)
 	.setImage(song.thumbnail)
 	.setTimestamp()
 	.setFooter('ZAREDEN BANGER')
